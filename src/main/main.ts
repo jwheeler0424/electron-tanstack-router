@@ -8,12 +8,17 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow, ipcMain, shell } from "electron";
-import log from "electron-log";
+import { app, BrowserWindow, ipcMain, session, shell } from "electron";
 import { autoUpdater } from "electron-updater";
 import path from "path";
+import sourceMapSupport from "source-map-support";
+import { fileURLToPath } from "url";
+import log from "./logger";
 import MenuBuilder from "./menu";
-import { resolveHtmlPath } from "./utils";
+import { installExtensions } from "./utils/extensions";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // import {
 //   deleteTODO,
 //   getAllTODO,
@@ -40,7 +45,7 @@ ipcMain.on("ipc-example", async (event, arg) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  const sourceMapSupport = require("source-map-support");
+  // const sourceMapSupport = await import("source-map-support");
   sourceMapSupport.install();
 }
 
@@ -48,25 +53,12 @@ const isDebug =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
 if (isDebug) {
-  require("electron-debug")();
+  (await import("electron-debug")).default();
 }
-
-const installExtensions = async () => {
-  const installer = require("electron-devtools-installer");
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ["REACT_DEVELOPER_TOOLS"];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload
-    )
-    .catch(console.log);
-};
 
 const createWindow = async () => {
   if (isDebug) {
-    await installExtensions();
+    await installExtensions(session.defaultSession);
   }
 
   const RESOURCES_PATH = app.isPackaged
@@ -83,13 +75,30 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath("icon.png"),
     webPreferences: {
-      preload: app.isPackaged
-        ? path.join(__dirname, "preload.js")
-        : path.join(__dirname, "../../.erb/dll/preload.js"),
+      sandbox: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath("index.html"));
+  // and load the index.html of the app.
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+    );
+  }
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": ["script-src 'unsafe-inline' 'self'"],
+      },
+    });
+  });
 
   mainWindow.on("ready-to-show", () => {
     if (!mainWindow) {
