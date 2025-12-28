@@ -1,11 +1,14 @@
 import Electron, { ipcMain } from "electron";
 import updater from "electron-updater";
+import logger from "../logger";
 import { UPDATE_CHANNEL, UPDATE_CODE } from "../utils/constants";
 const { autoUpdater } = updater;
 let webContents: Electron.WebContents | null = null;
 
 autoUpdater.forceDevUpdateConfig = false;
 autoUpdater.autoDownload = false;
+logger.transports.file.level = "info";
+autoUpdater.logger = logger;
 
 autoUpdater.on("error", (err) => sendStatus(UPDATE_CODE.error, err.message));
 autoUpdater.on("checking-for-update", () => sendStatus(UPDATE_CODE.checking));

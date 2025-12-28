@@ -3,14 +3,19 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config
 export default defineConfig({
   build: {
-    lib: {
-      entry: "src/main/main.ts",
-      fileName: "main",
-      name: "main",
-      formats: ["es"],
-      // ...
+    rollupOptions: {
+      external: ["@electric-sql/pglite", "drizzle-orm"],
     },
   },
+  // build: {
+  //   lib: {
+  //     entry: "src/main/main.ts",
+  //     fileName: "main",
+  //     name: "main",
+  //     // formats: ["umd"],
+  //     // ...
+  //   },
+  // },
 });
 // import react from "@vitejs/plugin-react";
 // import { readdirSync, statSync } from "node:fs";

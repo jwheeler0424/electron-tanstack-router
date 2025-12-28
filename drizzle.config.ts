@@ -1,13 +1,11 @@
 import { defineConfig } from "drizzle-kit";
 import { existsSync, mkdirSync } from "fs";
 import path, { dirname } from "path";
-import { APP_NAME, DB_CONFIG } from "./src/main/utils/constants";
+import { getUserDataPath } from "src/main/utils";
+import { DB_NAME } from "./src/main/utils/constants";
 
-const databasePath = path.join(
-  process.env.APPDATA ?? "",
-  APP_NAME,
-  DB_CONFIG.dbFileName
-);
+const userDataPath = getUserDataPath();
+const databasePath = path.join(userDataPath ?? __dirname, DB_NAME);
 
 const generateDbPath = (dirString: string) => {
   console.warn("databasePath: ", databasePath);
@@ -16,6 +14,7 @@ const generateDbPath = (dirString: string) => {
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
+    console.log({ dir });
   } catch (error) {
     console.error("Database connection error:", error);
     throw error;
@@ -29,6 +28,7 @@ export default defineConfig({
   dialect: "postgresql", // "mysql" | "sqlite" | "postgresql" | "turso" | "singlestore"
   schema: "./src/main/db/schema",
   out: "./migrations",
+  driver: "pglite",
   dbCredentials: {
     url: databasePath,
   },

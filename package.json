@@ -3,7 +3,7 @@
   "productName": "electron-forge",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": ".vite/build/main.mjs",
+  "main": ".vite/build/main.js",
   "scripts": {
     "generate-routes": "tsr generate",
     "generate-schema": "cross-env NODE_ENV=development npx drizzle-kit generate",
@@ -72,6 +72,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.6.2",
     "lucide-react": "^0.562.0",
+    "pg": "^8.16.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router": "^7.11.0",

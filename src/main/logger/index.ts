@@ -1,7 +1,7 @@
 import { app } from "electron";
 import log from "electron-log";
 import path from "path";
-import { isProd } from "../utils";
+// import { isProd } from "../utils";
 import { APP_NAME } from "../utils/constants";
 
 /**
@@ -25,7 +25,7 @@ log.transports.file.format =
   "[{y}-{m}-{d} {h}:{i}:{s}.{ms}][{processType}][{level}]{scope} {text}";
 log.transports.file.maxSize = 10 * 1024 * 1024;
 
-if (isProd) {
+if (process.env.NODE_ENV === "production") {
   log.transports.console.level = false;
 }
 export default log;
