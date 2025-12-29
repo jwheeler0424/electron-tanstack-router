@@ -8,13 +8,11 @@ const userDataPath = getUserDataPath();
 const databasePath = path.join(userDataPath ?? __dirname, DB_NAME);
 
 const generateDbPath = (dirString: string) => {
-  console.warn("databasePath: ", databasePath);
   try {
     const dir = dirname(dirString);
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
-    console.log({ dir });
   } catch (error) {
     console.error("Database connection error:", error);
     throw error;

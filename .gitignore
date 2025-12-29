@@ -93,5 +93,6 @@ typings/
 
 # Electron-Forge
 out/
+migrations/
 userData/
 userData/electron-forge
