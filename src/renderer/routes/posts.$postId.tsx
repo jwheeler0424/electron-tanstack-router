@@ -1,18 +1,19 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { PostErrorComponent } from "src/renderer/components/PostError";
-import { fetchPost } from "../posts";
+import { PostErrorComponent } from "../components/PostError";
+import { postQueryOptions } from "../postQueryOptions";
 
 export const Route = createFileRoute("/posts/$postId")({
-  loader: async ({ params: { postId } }) => fetchPost(postId),
-  errorComponent: PostErrorComponent,
-  notFoundComponent: () => {
-    return <p>Post not found</p>;
+  loader: ({ context: { queryClient }, params: { postId } }) => {
+    return queryClient.ensureQueryData(postQueryOptions(postId));
   },
+  errorComponent: PostErrorComponent,
   component: PostComponent,
 });
 
 function PostComponent() {
-  const post = Route.useLoaderData();
+  const postId = Route.useParams().postId;
+  const { data: post } = useSuspenseQuery(postQueryOptions(postId));
 
   return (
     <div className="space-y-2">

@@ -1,8 +1,18 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
-import ApplicationProviders from "src/renderer/providers/application.provider";
-// import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import {
+  Link,
+  Outlet,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Auth } from "../lib/auth";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  auth: Auth;
+  queryClient: QueryClient;
+}>()({
   component: RootComponent,
   notFoundComponent: () => {
     return (
@@ -16,8 +26,8 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <ApplicationProviders>
-      <div className="p-2 flex gap-2 text-lg border-b">
+    <>
+      <div className="p-2 flex gap-2 text-lg">
         <Link
           to="/"
           activeProps={{
@@ -44,14 +54,6 @@ function RootComponent() {
           Pathless Layout
         </Link>{" "}
         <Link
-          to="/anchor"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          Anchor
-        </Link>{" "}
-        <Link
           // @ts-expect-error
           to="/this-route-does-not-exist"
           activeProps={{
@@ -63,8 +65,22 @@ function RootComponent() {
       </div>
       <hr />
       <Outlet />
-      {/* Start rendering router matches */}
-      {/* <TanStackRouterDevtools position="bottom-right" /> */}
-    </ApplicationProviders>
+      <TanStackDevtools
+        plugins={[
+          {
+            name: "TanStack Query",
+            render: <ReactQueryDevtoolsPanel />,
+          },
+          {
+            name: "TanStack Router",
+            render: <TanStackRouterDevtoolsPanel />,
+          },
+          // {
+          //   name: 'TanStack Form',
+          //   render: <ReactFormDevtoolsPanel />,
+          // },
+        ]}
+      />
+    </>
   );
 }

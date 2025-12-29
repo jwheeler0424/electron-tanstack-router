@@ -16,7 +16,6 @@ export default defineConfig({
       target: "react",
       autoCodeSplitting: true,
     }),
-    // react's vite plugin must come after start's vite plugin
     react(),
   ],
   resolve: {

@@ -58,7 +58,6 @@ const isDebug =
 const createWindow = async () => {
   if (isDebug) {
     debug();
-    // await installExtensions(session.defaultSession);
   }
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, "assets", ...paths);
