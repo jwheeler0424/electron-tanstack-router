@@ -8,6 +8,7 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "./ui/dialog";
+
 type UpdateInfo = {
   update: boolean;
   version: string;

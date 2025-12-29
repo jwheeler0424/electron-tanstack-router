@@ -1,7 +1,19 @@
-interface QueryDBType {
-  path: string;
-  params?: Record<string, any>;
-  timeout?: number;
+export interface IpcPayload {
+  fullChannel: string;
+  body?: any;
+}
+
+export interface ElectronAPI {
+  /**
+   * Triggers the central API dispatcher in the Main process.
+   */
+  invoke: (channel: "api-dispatcher", payload: IpcPayload) => Promise<any>;
+
+  /**
+   * Sets up a listener for background events (emit/broadcast).
+   * Returns a cleanup function to remove the listener.
+   */
+  on: (channel: string, callback: (data: any) => void) => () => void;
 }
 
 interface fsProxy {
@@ -42,15 +54,17 @@ interface Logger {
   silly: (msg: string) => Promise<void>;
 }
 
-declare interface Window {
-  electron: {
-    queryDB: <T>(
-      params: QueryDBType
-    ) => Promise<{ code: number; data: any; msg: string }>;
-    fs: fsProxy;
-    env: "development" | "production";
-    update: AppUpdate;
-    logger: Logger;
-    createWindow: () => Promise<string>;
-  };
+declare global {
+  interface Window {
+    electron: {
+      api: ElectronAPI;
+      fs: fsProxy;
+      env: "development" | "production";
+      update: AppUpdate;
+      logger: Logger;
+      createWindow: () => Promise<string>;
+    };
+  }
 }
+
+export {};

@@ -1,8 +1,8 @@
+import { APP_NAME } from "@/constants/application";
 import { app } from "electron";
 import log from "electron-log";
 import path from "path";
 import { appConfig as config } from "../config/app.config";
-import { APP_NAME } from "../constants/application";
 
 /**
  * error,
