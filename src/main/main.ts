@@ -20,10 +20,11 @@ import {
 import debug from "electron-debug";
 import path from "path";
 import sourceMapSupport from "source-map-support";
-import "./auto-update/index";
+import { appConfig as config } from "./config/app.config";
+import "./config/auto-update.config";
 import { init } from "./db/init";
-import logger from "./logger";
 import MenuBuilder from "./menu";
+import logger from "./utils/logger";
 import WindowPool, { initWindowPool } from "./window/window-pool";
 
 // import {
@@ -44,7 +45,7 @@ ipcMain.on("ipc-example", async (event, arg) => {
   event.reply("ipc-example", msgTemplate("pong"));
 });
 
-if (process.env.NODE_ENV === "production") {
+if (config.NODE_ENV === "production") {
   sourceMapSupport.install();
 }
 
@@ -53,7 +54,7 @@ const RESOURCES_PATH = app.isPackaged
   : path.join(__dirname, "../../");
 
 const isDebug =
-  process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
+  config.NODE_ENV === "development" || config.DEBUG_PROD === "true";
 
 const createWindow = async () => {
   if (isDebug) {
@@ -103,7 +104,7 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
+    if (config.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
       mainWindow.show();

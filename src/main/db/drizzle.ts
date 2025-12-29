@@ -1,8 +1,8 @@
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle, PgliteDatabase } from "drizzle-orm/pglite";
 import path from "path";
+import { DB_NAME } from "../constants/application";
 import { generateDirPath, getUserDataPath } from "../utils";
-import { DB_NAME } from "../utils/constants";
 import * as schema from "./schema";
 const userDataPath = getUserDataPath();
 const databasePath = path.join(userDataPath ?? __dirname, DB_NAME);

@@ -1,12 +1,13 @@
 import { migrate } from "drizzle-orm/pglite/migrator";
 import path from "path";
-import log from "../logger";
+import { appConfig as config } from "../config/app.config";
+import log from "../utils/logger";
 import { db } from "./drizzle";
 
 export const connect = async () => {
-  log.info("Database", process.env.NODE_ENV);
+  log.info("Database", config.NODE_ENV);
   log.info("Database", path.join(__dirname, "../../migrations"));
-  if (process.env.NODE_ENV === "production") {
+  if (config.NODE_ENV === "production") {
     try {
       await migrate(db, {
         migrationsFolder: path.join(__dirname, "../../migrations"),

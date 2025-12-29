@@ -5,6 +5,7 @@ import {
   MenuItemConstructorOptions,
   shell,
 } from "electron";
+import { appConfig as config } from "./config/app.config";
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -19,10 +20,7 @@ export default class MenuBuilder {
   }
 
   buildMenu(): Menu {
-    if (
-      process.env.NODE_ENV === "development" ||
-      process.env.DEBUG_PROD === "true"
-    ) {
+    if (config.NODE_ENV === "development" || config.DEBUG_PROD === "true") {
       this.setupDevelopmentEnvironment();
     }
 
@@ -184,8 +182,7 @@ export default class MenuBuilder {
     };
 
     const subMenuView =
-      process.env.NODE_ENV === "development" ||
-      process.env.DEBUG_PROD === "true"
+      config.NODE_ENV === "development" || config.DEBUG_PROD === "true"
         ? subMenuViewDev
         : subMenuViewProd;
 
@@ -213,8 +210,7 @@ export default class MenuBuilder {
       {
         label: "&View",
         submenu:
-          process.env.NODE_ENV === "development" ||
-          process.env.DEBUG_PROD === "true"
+          config.NODE_ENV === "development" || config.DEBUG_PROD === "true"
             ? [
                 {
                   label: "&Reload",

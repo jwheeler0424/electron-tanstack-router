@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { UPDATE_CHANNEL } from "../../main/utils/constants";
+import { UPDATE_CHANNEL } from "../../main/constants/application";
 
 export const update = {
   onUpdateMsg: (callback: (response: any) => void) => {
