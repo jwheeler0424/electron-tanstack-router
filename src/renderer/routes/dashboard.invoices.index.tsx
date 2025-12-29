@@ -44,11 +44,11 @@ function InvoicesIndexComponent() {
             </button>
           </div>
           {createInvoiceMutation.status === "success" ? (
-            <div className="inline-block px-2 py-1 rounded-sm bg-green-500 text-white animate-bounce [animation-iteration-count:2.5] [animation-duration:.3s]">
+            <div className="inline-block px-2 py-1 rounded-sm bg-green-500 text-white animate-bounce repeat-2.5 animation-duration-[.3s]">
               Created!
             </div>
           ) : createInvoiceMutation.status === "error" ? (
-            <div className="inline-block px-2 py-1 rounded-sm bg-red-500 text-white animate-bounce [animation-iteration-count:2.5] [animation-duration:.3s]">
+            <div className="inline-block px-2 py-1 rounded-sm bg-red-500 text-white animate-bounce repeat-2.5 animation-duration-[.3s]">
               Failed to create.
             </div>
           ) : null}
