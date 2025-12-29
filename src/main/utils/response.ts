@@ -1,61 +1,104 @@
+type ResponseMessage = <TData extends any = null>(opts?: {
+  code?: number;
+  msg?: string;
+  data?: TData;
+}) => {
+  code: number;
+  msg: string;
+  data?: TData;
+};
+type ResponseError = (opts?: {
+  code?: number;
+  msg?: string;
+  error?: Error;
+}) => {
+  code: number;
+  msg: string;
+  error?: Error;
+};
+type ResponseErrorWithData = <TData extends any = null>(opts?: {
+  code?: number;
+  msg?: string;
+  error?: Error;
+  data?: TData;
+}) => {
+  code: number;
+  msg: string;
+  error?: Error;
+  data?: TData;
+};
+type ApiResponse = ResponseMessage | ResponseError | ResponseErrorWithData;
+
 export const response = {
-  ok: (data?: { code?: number; msg?: string; data?: any }) => {
+  ok: <TData>(opts?: { code?: number; msg?: string; data?: TData }) => {
     return {
-      code: 200,
-      msg: "OK",
-      data: null,
-      ...data,
+      code: opts?.code || 200,
+      msg: opts?.msg || "OK",
+      data: opts?.data || null,
     };
   },
-  created: (data?: { code?: number; msg?: string; data?: any }) => {
+  created: <TData>(opts?: { code?: number; msg?: string; data?: TData }) => {
     return {
-      code: 201,
-      msg: "Created",
-      data: null,
-      ...data,
+      code: opts?.code || 201,
+      msg: opts?.msg || "Created",
+      data: opts?.data || null,
     };
   },
-  noContent: (data?: { code?: number; msg?: string; data?: any }) => {
+  noContent: <TData>(opts?: { code?: number; msg?: string; data?: TData }) => {
     return {
-      code: 204,
-      msg: "No Content",
-      data: null,
-      ...data,
+      code: opts?.code || 204,
+      msg: opts?.msg || "No Content",
+      data: opts?.data || null,
     };
   },
-  badRequest: (data?: { code?: number; msg?: string; data?: any }) => {
+  badRequest: (opts?: { code?: number; msg?: string; error?: any }) => {
     return {
-      code: 400,
-      msg: "Bad Request",
-      ...data,
+      code: opts?.code || 400,
+      msg: opts?.msg || "Bad Request",
+      error: opts?.error || null,
     };
   },
-  unauthorized: (data?: { code?: number; msg?: string; data?: any }) => {
+  unauthorized: (opts?: { code?: number; msg?: string; error?: any }) => {
     return {
-      code: 401,
-      msg: "Unauthorized",
-      ...data,
+      code: opts?.code || 401,
+      msg: opts?.msg || "Unauthorized",
+      error: opts?.error || null,
     };
   },
-  forbidden: (data?: { code?: number; msg?: string; data?: any }) => {
+  forbidden: (opts?: { code?: number; msg?: string; error?: any }) => {
     return {
-      code: 403,
-      msg: "Forbidden",
-      ...data,
+      code: opts?.code || 403,
+      msg: opts?.msg || "Forbidden",
+      error: opts?.error || null,
     };
   },
-  notFound: (data?: { code?: number; msg?: string; data?: any }) => {
+  notFound: (opts?: { code?: number; msg?: string; error?: any }) => {
     return {
-      code: 404,
-      msg: "Not Found",
-      ...data,
+      code: opts?.code || 404,
+      msg: opts?.msg || "Not Found",
+      error: opts?.error || null,
     };
   },
-  error: (data?: { code?: number; msg?: string; data?: any }) => {
+  error: <TData>(opts?: {
+    code?: number;
+    msg?: string;
+    error?: any;
+    data?: TData;
+  }) => {
     return {
-      code: 500,
-      msg: "Internal Server Error",
-      ...data,
+      code: opts?.code || 500,
+      msg: opts?.msg || "Internal Server Error",
+      error: opts?.error || null,
+      data: opts?.data,
     };
   },
+} satisfies {
+  ok: ApiResponse;
+  created: ApiResponse;
+  noContent: ApiResponse;
+  badRequest: ApiResponse;
+  unauthorized: ApiResponse;
+  forbidden: ApiResponse;
+  notFound: ApiResponse;
+  error: ApiResponse;
 };

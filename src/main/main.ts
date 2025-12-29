@@ -24,6 +24,7 @@ import { appConfig as config } from "./config/app.config";
 import "./config/auto-update.config";
 import { init } from "./db/init";
 import MenuBuilder from "./menu";
+import { update } from "./update";
 import logger from "./utils/logger";
 import WindowPool, { initWindowPool } from "./window/window-pool";
 
@@ -77,6 +78,10 @@ const createWindow = async () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
+  // Enable auto-update logic
+  update(mainWindow);
+
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);

@@ -14,7 +14,8 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["./src/renderer/src/*"]
+      "@/*": ["./src/*"],
+      "@/client/*": ["./src/renderer/*"]
     }
   },
   "exclude": ["userData"]
