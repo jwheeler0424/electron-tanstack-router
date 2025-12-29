@@ -1,6 +1,6 @@
 {
-  "name": "electron-forge",
-  "productName": "electron-forge",
+  "name": "electron-tanstack-router",
+  "productName": "electron-tanstack-router",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
