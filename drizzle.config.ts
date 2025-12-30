@@ -1,8 +1,8 @@
+import { DB_NAME } from "@/constants/application";
 import { defineConfig } from "drizzle-kit";
 import { existsSync, mkdirSync } from "fs";
 import path, { dirname } from "path";
 import { getUserDataPath } from "src/main/utils";
-import { DB_NAME } from "./src/main/constants/application";
 
 const userDataPath = getUserDataPath();
 const databasePath = path.join(userDataPath ?? __dirname, DB_NAME);
