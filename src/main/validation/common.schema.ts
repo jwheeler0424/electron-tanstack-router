@@ -1,5 +1,5 @@
 import * as z from "zod/mini";
-import { timezones } from "../constants/timezones";
+import { timezones } from "../../constants/timezones";
 
 export const NullableSchema = z.union([z.null(), z.undefined()]);
 

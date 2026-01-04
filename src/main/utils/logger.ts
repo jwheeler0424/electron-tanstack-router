@@ -1,7 +1,7 @@
-import { APP_NAME } from "@/constants/application";
 import { app } from "electron";
 import log from "electron-log";
 import path from "path";
+import { APP_NAME } from "../../constants/application";
 import { appConfig as config } from "../config/app.config";
 
 /**

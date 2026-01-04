@@ -54,15 +54,26 @@ interface Logger {
   silly: (msg: string) => Promise<void>;
 }
 
+interface auth {
+  login: (username: string, password: string) => Promise<any>;
+  logout: () => Promise<any>;
+  me: () => Promise<any>;
+  register: (username: string, email: string, password: string) => Promise<any>;
+  token: (refreshToken: string) => Promise<any>;
+  resetPassword: (email: string) => Promise<any>;
+  changePassword: (oldPassword: string, newPassword: string) => Promise<any>;
+}
+
 declare global {
   interface Window {
     electron: {
-      api: ElectronAPI;
+      health: () => Promise<{ status: string }>;
       fs: fsProxy;
       env: "development" | "production";
       update: AppUpdate;
       logger: Logger;
       createWindow: () => Promise<string>;
+      auth: auth;
     };
   }
 }

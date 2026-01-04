@@ -27,3 +27,21 @@ export enum UPDATE_CODE {
   updateDownloaded = 4,
   updateCancelled = 5,
 }
+
+export const AUTH_CHANNEL = {
+  LOGIN: "auth:login",
+  LOGOUT: "auth:logout",
+  ME: "auth:me",
+  REGISTER: "auth:register",
+  TOKEN: "auth:token",
+  RESET_PASSWORD: "auth:resetPassword",
+  CHANGE_PASSWORD: "auth:changePassword",
+};
+
+export const USER_CHANNEL = {
+  GET: "user:getProfile",
+  UPDATE: "user:updateProfile",
+  ALL: "user:all",
+  CREATE: "user:create",
+  DELETE: "user:delete",
+};

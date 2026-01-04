@@ -1,9 +1,20 @@
 import { ipcRenderer } from "electron";
+import { AUTH_CHANNEL } from "../../constants/application";
 
 export const auth = {
-  insertTODO: (todo: TODO) => ipcRenderer.invoke("todo:insert", todo),
-  deleteTODO: (id: number) => ipcRenderer.invoke("todo:delete", id),
-  getAllTODO: () => ipcRenderer.invoke("todo:getAll"),
-  getOneTODO: (id: number) => ipcRenderer.invoke("todo:getOne", id),
-  updateTODO: (todo: TODO) => ipcRenderer.invoke("todo:update", todo),
+  login: (username: string, password: string) =>
+    ipcRenderer.invoke(AUTH_CHANNEL.LOGIN, { username, password }),
+  logout: () => ipcRenderer.invoke(AUTH_CHANNEL.LOGOUT),
+  me: () => ipcRenderer.invoke(AUTH_CHANNEL.ME),
+  register: (username: string, email: string, password: string) =>
+    ipcRenderer.invoke(AUTH_CHANNEL.REGISTER, { username, email, password }),
+  token: (refreshToken: string) =>
+    ipcRenderer.invoke(AUTH_CHANNEL.TOKEN, refreshToken),
+  resetPassword: (email: string) =>
+    ipcRenderer.invoke(AUTH_CHANNEL.RESET_PASSWORD, email),
+  changePassword: (oldPassword: string, newPassword: string) =>
+    ipcRenderer.invoke(AUTH_CHANNEL.CHANGE_PASSWORD, {
+      oldPassword,
+      newPassword,
+    }),
 };

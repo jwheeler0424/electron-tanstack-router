@@ -9,7 +9,10 @@ export const getAppHand = () => {
 };
 
 export const getUserDataPath = () => {
-  return app ? app.getPath("userData") : path.join(process.cwd(), "userData");
+  const isProd = config.NODE_ENV === "production" && app.isPackaged;
+  return isProd
+    ? app.getPath("userData")
+    : path.join(process.cwd(), "userData");
 };
 
 export const getResourcePath = () => {

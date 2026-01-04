@@ -1,4 +1,5 @@
 import { migrate } from "drizzle-orm/pglite/migrator";
+import { app } from "electron";
 import path from "path";
 import { appConfig as config } from "../config/app.config";
 import log from "../utils/logger";
@@ -6,15 +7,13 @@ import { db } from "./drizzle";
 
 export const connect = async () => {
   log.info("Database", config.NODE_ENV);
-  log.info("Database", path.join(__dirname, "../../migrations"));
-  if (config.NODE_ENV === "production") {
-    try {
-      await migrate(db, {
-        migrationsFolder: path.join(__dirname, "../../migrations"),
-      });
-    } catch (e) {
-      log.error("Database connection error ", e);
-    }
+  log.info("Database", path.join(app.getAppPath(), "migrations"));
+  try {
+    await migrate(db, {
+      migrationsFolder: path.join(app.getAppPath(), "migrations"),
+    });
+  } catch (e) {
+    log.error("Database connection error ", e);
   }
   await testConnection();
 };

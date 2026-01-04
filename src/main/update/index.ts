@@ -1,4 +1,3 @@
-import { UPDATE_CHANNEL, UPDATE_CODE } from "@/constants/application";
 import Electron, { app, ipcMain } from "electron";
 import type {
   ProgressInfo,
@@ -6,6 +5,7 @@ import type {
   UpdateInfo,
 } from "electron-updater";
 import { autoUpdater, CancellationToken } from "electron-updater";
+import { UPDATE_CHANNEL, UPDATE_CODE } from "../../constants/application";
 import logger from "../utils/logger";
 import { response } from "../utils/response";
 

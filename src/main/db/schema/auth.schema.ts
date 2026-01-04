@@ -31,11 +31,7 @@ export const user = pgTable("user", {
     .references(() => userRole.name, {
       onDelete: "set default",
     }),
-  banned: boolean("banned"),
-  banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
-  twoFactorEnabled: boolean("two_factor_enabled"),
-  username: text("username").unique(),
+  username: text("username").unique().notNull(),
   displayUsername: text("display_username"),
 });
 
@@ -57,28 +53,6 @@ export const account = pgTable("account", {
   password: text("password"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-});
-
-export const verification = pgTable("verification", {
-  id: idPrimaryKey,
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").$defaultFn(
-    () => /* @__PURE__ */ new Date()
-  ),
-  updatedAt: timestamp("updated_at").$defaultFn(
-    () => /* @__PURE__ */ new Date()
-  ),
-});
-
-export const twoFactor = pgTable("two_factor", {
-  id: idPrimaryKey,
-  secret: text("secret").notNull(),
-  backupCodes: text("backup_codes").notNull(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
 });
 
 // --- ROLES & PERMISSIONS SCHEMAS ---
@@ -110,6 +84,13 @@ export const permissionAction = pgTable("permission_action", {
 });
 
 // --- DRIZZLE RELATIONS ---
+
+export const userAccountRelations = relations(user, ({ one }) => ({
+  account: one(account, {
+    fields: [user.id],
+    references: [account.userId],
+  }),
+}));
 
 /**
  * A UserRole can have many Permissions.

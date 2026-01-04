@@ -9,6 +9,12 @@ function App() {
 }
 
 const rootElement = document.getElementById("app")!;
+window.electron.health().then((res) => {
+  console.log("Health Check:", res);
+});
+window.electron.auth.login("testuser", "Password123!").then((res) => {
+  console.log("Login Response:", res);
+});
 
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);

@@ -21,21 +21,14 @@ import debug from "electron-debug";
 import path from "path";
 import sourceMapSupport from "source-map-support";
 import { appConfig as config } from "./config/app.config";
-import "./config/auto-update.config";
 import { init } from "./db/init";
+import { useAuth } from "./features/auth/auth.routes";
 import MenuBuilder from "./menu";
+import "./update";
 import { update } from "./update";
 import logger from "./utils/logger";
+import { response } from "./utils/response";
 import WindowPool, { initWindowPool } from "./window/window-pool";
-
-// import {
-//   deleteTODO,
-//   getAllTODO,
-//   getOneTODO,
-//   insertTODO,
-//   updateTODO,
-//   TODO,
-// } from './services/Database.service';
 
 let windowPool: WindowPool;
 let mainWindow: BrowserWindow | null = null;
@@ -128,6 +121,7 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: "deny" };
   });
+  console.log({ cookies: await session.defaultSession.cookies });
 };
 
 /**
@@ -146,21 +140,10 @@ app
       if (BrowserWindow.getAllWindows().length === windowPool.available?.length)
         createWindow();
     });
-    // ipcMain.handle('todo:insert', async (_, todo: TODO) => {
-    //   insertTODO(todo);
-    // });
-    // ipcMain.handle('todo:update', async (_, todo: TODO) => {
-    //   updateTODO(todo);
-    // });
-    // ipcMain.handle('todo:delete', async (_, id: number) => {
-    //   deleteTODO(id);
-    // });
-    // ipcMain.handle('todo:getOne', async (_, id: number) => {
-    //   return getOneTODO(id);
-    // });
-    // ipcMain.handle('todo:getAll', async () => {
-    //   return getAllTODO();
-    // });
+    ipcMain.handle("health", () => {
+      return response.ok({ data: { status: "ok" } });
+    });
+    await useAuth(mainWindow);
   })
   .catch(logger.error);
 

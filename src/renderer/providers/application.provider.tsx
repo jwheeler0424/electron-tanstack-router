@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
-import { ThemeProvider } from "src/renderer/providers/theme.provider";
-
+import { CookiesProvider } from "react-cookie";
 import { auth } from "../lib/auth";
 import { getRouter } from "../lib/router";
 import { queryClient } from "../lib/utils/query-client";
+import { ThemeProvider } from "./theme.provider";
 
 const router = getRouter();
 
@@ -17,10 +17,12 @@ declare module "@tanstack/react-router" {
 
 export default function ApplicationProviders() {
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} context={{ auth }} />
-      </QueryClientProvider>
-    </ThemeProvider>
+    <CookiesProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} context={{ auth }} />
+        </QueryClientProvider>
+      </ThemeProvider>
+    </CookiesProvider>
   );
 }
