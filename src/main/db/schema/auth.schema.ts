@@ -35,6 +35,8 @@ export const user = pgTable("user", {
   displayUsername: text("display_username"),
 });
 
+export type User = typeof user.$inferSelect;
+
 export const account = pgTable("account", {
   id: idPrimaryKey,
   accountId: uuid("account_id")

@@ -22,7 +22,8 @@ import path from "path";
 import sourceMapSupport from "source-map-support";
 import { appConfig as config } from "./config/app.config";
 import { init } from "./db/init";
-import { useAuth } from "./features/auth/auth.routes";
+import { registerAuthFeature } from "./features/auth";
+import "./features/auth/auth.routes";
 import MenuBuilder from "./menu";
 import "./update";
 import { update } from "./update";
@@ -32,12 +33,6 @@ import WindowPool, { initWindowPool } from "./window/window-pool";
 
 let windowPool: WindowPool;
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on("ipc-example", async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply("ipc-example", msgTemplate("pong"));
-});
 
 if (config.NODE_ENV === "production") {
   sourceMapSupport.install();
@@ -49,6 +44,11 @@ const RESOURCES_PATH = app.isPackaged
 
 const isDebug =
   config.NODE_ENV === "development" || config.DEBUG_PROD === "true";
+
+ipcMain.handle("health", () => {
+  return response.ok({ data: { status: "ok" } });
+});
+registerAuthFeature();
 
 const createWindow = async () => {
   if (isDebug) {
@@ -121,7 +121,6 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: "deny" };
   });
-  console.log({ cookies: await session.defaultSession.cookies });
 };
 
 /**
@@ -140,10 +139,6 @@ app
       if (BrowserWindow.getAllWindows().length === windowPool.available?.length)
         createWindow();
     });
-    ipcMain.handle("health", () => {
-      return response.ok({ data: { status: "ok" } });
-    });
-    await useAuth(mainWindow);
   })
   .catch(logger.error);
 

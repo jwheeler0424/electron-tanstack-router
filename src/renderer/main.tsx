@@ -16,6 +16,12 @@ window.electron.auth.login("testuser", "Password123!").then((res) => {
   console.log("Login Response:", res);
 });
 
+setTimeout(() => {
+  window.electron.auth.logout().then((res) => {
+    console.log("Logout Response:", res);
+  });
+}, 5000);
+
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
